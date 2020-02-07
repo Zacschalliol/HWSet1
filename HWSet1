@@ -1,0 +1,612 @@
+#PROBLEM 1.4.1#
+
+#Part a
+bisection = function(f,a,b,tol=0.0001){
+  if (f(a)*f(b) > 0){
+    return ("Boundary Conditions Not Met")
+  }
+  else{
+    middle = a
+    while (abs(f(middle))>tol){
+      middle = (a+b)/2
+      if (f(middle)*f(a)>0) (a = middle)
+      else (b = middle)
+      x=middle
+      y=f(middle)
+      ## if you want to "see" what happens at every step, take off the # of the next line ##
+      #cat(sprintf("x-Val: %.4f ; f(x-val): %.4f\n",x,y))
+    }
+    return (middle)
+  }
+}
+
+x = seq(0,10)
+aprof=function(x){(1500-100*x)*(1+.15*x)}
+daprof = function(x){fprime(aprof,x)}
+plot(x,daprof(x),"l")
+
+ans=bisection (daprof,2,6)
+x=seq(0,10,1)
+plot(x,aprof(x),"l")
+abline(h=0,col="red")
+abline(v=zero,col="blue")
+print(ans)
+
+#Part b
+
+p = seq(.12,.18,.01)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  aprof = function (x){
+    return((1500-100*x)*(1+p[i]*x))
+  }
+  daprof = function(x){fprime(aprof,x,)}
+  ans[i] = bisection(daprof,0,20,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="rebate amount",ylab="x(steps of rebate)")
+title("Sensitivity of change to sales increase")
+
+#PROBLEM 1.4.2#
+
+#Part A
+pprof = function(x){(0.65-.01*x)*(200+5*x)-0.45*x}
+
+p = seq(.35,.45,.01)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  pprof = function (x){
+    return((0.65-.01*x)*(200+5*x)-p[i]*x)
+  }
+  dpprof = function(x){fprime(pprof,x,)}
+  ans[i] = bisection(dpprof,0,20,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="cost per day",ylab="days")
+title("Sensitivity of change to Cost")
+
+#Part B
+p2prof = function(x){(0.65-.01*x)*(200+7*x)-0.60*x}
+dp2prof = function(x){fprime(p2prof,x)}
+plot(x,dp2prof(x),"l")
+
+ans=bisection (dp2prof,5,15)
+x=seq(0,20,1)
+plot(x,aprof(x),"l")
+abline(h=0,col="red")
+abline(v=zero,col="blue")
+print(ans)
+print(p2prof(13.92822))
+
+
+#PROBLEM 1.4.3#
+
+#Part a
+pprof = function(x){(0.65-.01*x)*(200+5*x)-0.45*x}
+p3prof = function(x){((0.65)-(0.01*x)+(0.00004*x^2))*(200+5*x)-0.45*x}
+plot(x,pprof(x),type="l",col="red")
+par(new=TRUE)
+plot(x,p3prof(x),type="l",col="green")
+
+#Part b
+p3prof = function(x){((0.65)-(0.01*x)+(0.00004*x^2))*(200+5*x)-0.45*x}
+plot(x,p3prof(x),type="l")
+dp3=function(x){fprime(p3prof,x)}
+plot(x,dp3(x),type="l")
+ans=bisection(dp3,5,15)
+print(ans)
+print(p3prof(10.27832))
+
+#Part c
+p3prof = function(x){((0.65)-(0.01*x)+(0.00004*x^2))*(200+5*x)-0.45*x}
+
+p = seq(.00003,.00005,.000001)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  p3prof = function (x){
+    return(((0.65)-(0.01*x)+(p[i]*x^2))*(200+5*x)-0.45*x)
+  }
+  dp3 = function(x){fprime(p3prof,x)}
+  ans[i] = bisection(dp3,0,20,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="cost per day",ylab="days")
+title("Sensitivity of change to Cost")
+
+#PROBLEM 1.4.4#
+
+#Part a 
+bisection = function(f,a,b,tol=0.0001){
+  if (f(a)*f(b) > 0){
+    return ("Boundary Conditions Not Met")
+  }
+  else{
+    middle = a
+    while (abs(f(middle))>tol){
+      middle = (a+b)/2
+      if (f(middle)*f(a)>0) (a = middle)
+      else (b = middle)
+      x=middle
+      y=f(middle)
+      ## if you want to "see" what happens at every step, take off the # of the next line ##
+      #cat(sprintf("x-Val: %.4f ; f(x-val): %.4f\n",x,y))
+    }
+    return (middle)
+  }
+}
+
+r=5/7
+days=function(x){500*(200/(r*(x+1)))+(18000+800*200/(r*(x+1)))*x+(200/(r*(x+1))>14)*(10000*(200/(r*(x+1))-14))}
+x = seq(0,20)
+f = function(x)(x<=14)*0+(x>14)*(10000*(200/((5/7)*(x+1))))
+f = Vectorize(f)
+plot(x,f(x),type="l")
+plot(x,days(x),type="l")
+
+pdays=function(x){fprime(days,x)}
+plot(x,pdays(x),type="l")
+bisection(pdays,0,100)
+days(12)
+
+#Part b
+r=5/7
+days=function(x){500*(200/(r*(x+1)))+(18000+800*200/(r*(x+1)))*x+(200/(r*(x+1))>14)*(10000*(200/(r*(x+1))-14))}
+p = seq(.6,.81,.01)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  days = function (x){
+    return(500*(200/(p[i]*(x+1)))+(18000+800*200/(p[i]*(x+1)))*x+(200/(p[i]*(x+1))>14)*(10000*(200/(p[i]*(x+1))-14)))
+  }
+  pdays = function(x){fprime(days,x,)}
+  ans[i] = bisection(pdays,0,20,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="working rate",ylab="days (x)")
+title("Sensitivity of change to working rate")
+
+
+#PROBLEM 1.4.5
+
+#Part a 
+r=.08
+k=400000
+x=seq(0,300000)
+growth=.08*x*(1-(x/k))
+pop=function(x){
+  return(.08*x*(1-(x/400000)))
+}
+fprime = function (f,a,h=0.0001){(f(a+h)-f(a-h))/(2*h)}
+dpop=function(x){fprime(pop,x)}
+
+plot(x,dpop(x),type="l")
+
+ans=bisection(dpop,175000,225000)
+print(ans)
+
+#Part b 
+
+p = seq(.05,.11,.001)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  whale = function (x){
+    return(p[i]*x*(1-(x/400000)))
+  }
+  dwhale = function(x){fprime(whale,x)}
+  ans[i] = bisection(dwhale,190000,220000,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="cost per day",ylab="days")
+title("Sensitivity of change to Cost")
+
+
+
+#PROBLEM 6#
+
+#Part a
+E=function(x){((0.08*(1-(x/400000)))/0.00001)}
+P=function(x){6000*(0.0001*((0.08*(1-(x/400000)))/0.00001)*x)-500*((0.08*(1-(x/400000)))/0.00001)}
+dP=function(x){fprime(P,x)}
+plot(x,dP(x),type="l")
+ans=bisection(dP,190000,220000)
+print(ans)
+print(E(200416.7))
+
+
+#Part b
+P=function(x){6000*(0.0001*((0.08*(1-(x/400000)))/0.00001)*x)-500*((0.08*(1-(x/400000)))/0.00001)}
+
+p = seq(480,520,.5)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  P = function (x){
+    return(6000*(0.0001*((0.08*(1-(x/400000)))/0.00001)*x)-p[i]*((0.08*(1-(x/400000)))/0.00001))
+  }
+  dP = function(x){fprime(P,x)}
+  ans[i] = bisection(dP,190000,220000,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="cost per day",ylab="days")
+title("Sensitivity of change to Cost")
+
+
+#PROBLEM 1.4.7
+
+bisection = function(f,a,b,tol=0.0001){
+  if (f(a)*f(b) > 0){
+    return ("Boundary Conditions Not Met")
+  }
+  else{
+    middle = a
+    while (abs(f(middle))>tol){
+      middle = (a+b)/2
+      if (f(middle)*f(a)>0) (a = middle)
+      else (b = middle)
+      x=middle
+      y=f(middle)
+      ## if you want to "see" what happens at every step, take off the # of the next line ##
+      #cat(sprintf("x-Val: %.4f ; f(x-val): %.4f\n",x,y))
+    }
+    return (middle)
+  }
+}
+
+#Part a
+prof=function(x){((0.65-0.01*x)*(200+5*x)-(0.45*x+100))/(x+90)}
+pprof=function(x){fprime(prof,x)}
+plot(x,pprof(x),type="l")
+plot(x,prof(x),type="l")
+x=seq(0,10)
+bisection(pprof,0,10)
+prof(4.53125)
+
+#Part b
+prof=function(x){((0.65-0.01*x)*(200+5*x)-(0.45*x+100))/(x+90)}
+p = seq(4,6.5,.1)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  aprof = function (x){
+    return(((0.65-0.01*x)*(200+p[i]*x)-(0.45*x+100))/(x+90))
+  }
+  daprof = function(x){fprime(aprof,x,)}
+  ans[i] = bisection(daprof,0,20,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="Growth Rate",ylab="x(days)")
+title("Sensitivity of change to growth rate")
+
+
+
+
+#PROBLEM 1.4.8
+
+
+#Part a
+
+pro=function(x){(0.65-0.01*x)*(200+(5-(x/30))*x)-0.45*x}
+dpro=function(x){fprime(pro,x)}
+x=seq(0,10)
+plot(x,dpro(x),type="l")
+bisection(dpro,4,8)
+pro(5.817383)
+
+
+#Part b
+pro=function(x){(0.65-0.01*x)*(200+(5-(x/30))*x)-0.45*x}
+p = seq(28,32,.2)
+ans = array(0,length(p))
+for (i in 1:length(p)){
+  aprof = function (x){
+    return((0.65-0.01*x)*(200+(5-(x/p[i]))*x)-0.45*x)
+  }
+  daprof = function(x){fprime(aprof,x,)}
+  ans[i] = bisection(daprof,0,20,0.0001)
+}
+print(ans)
+plot(p,ans,"o",xlab="Time until full grown",ylab="x(days)")
+title("Sensitivity of change to full grown time")
+
+
+#Problem 2.4.1
+
+#Part a
+T = function(x){(((0.05*x[1]*(1-(x[1]/150000)))-((10^(-8))*x[1]*x[2])+(0.08*x[2]*(1-(x[2]/400000)))-((10^(-8))*x[1]*x[2]))*-1)}
+x=c(500,500)
+ans = optim(x,T,method="L-BFGS-B")
+print(ans)
+paste(c("Growth maximized at:",round(ans$par[1])," Blue Whales and ",
+        round(ans$par[2])," Fin Whales. Resulting in total growth of: whales",
+        format(round(-T(ans$par)),big.mark=",")),collapse="")
+paste(c("Average Growth of blue whales:",round((.05*x[1]*(1-(x[1]/150000)))-(10^(-8)*x[1]*x[2])),collapse=""))
+paste(c("Average Growth of fin whales:",round((.08)*x[2]*(1-(x[2]/400000))-(10^(-8))*x[1]*x[2])),collapse="")
+
+#Part b
+T = function(a){
+  P = function(x){(((a*x[1]*(1-(x[1]/150000)))-((10^(-8))*x[1]*x[2])+(0.08*x[2]*(1-(x[2]/400000)))-((10^(-8))*x[1]*x[2]))*-1)}
+  x = c(65125,185109)
+  ans = optim(x,P,method="BFGS")
+  ## Choose which of these that we will return ##
+  print(ans$par)
+  print(ans$value) 
+}
+T(.05)
+
+a = seq(.04,.06,.001) #FIX THIS IN ORDER TO SOLVE THE PROBLEM
+ans.x1=0
+ans.x2=0
+ans.growth=0
+for(i in 1:length(a)){
+  ans = T(a[i])
+  ans.x1[i]=ans$par[1]
+  ans.x2[i]=ans$par[2]
+  ans.growth[i] = -ans$value
+}
+result = data.frame(a=a,x1=ans.x1,x2=ans.x2,growth=format(ans.growth,big.mark=","))
+print(result)
+plot(a,ans.x1,xlim=c(0,0.02),ylim=c(0,10000),type="l",ylab="optimum x1/x2",main="Figure 2.5/2.6 Book",
+     xaxs="i", yaxs="i",col="blue")
+lines(a,ans.x2,col="red")
+legend("topleft",legend=c("x1","x2"),lty=1,col=c("blue","red"))
+grid(lwd=2, nx=4, ny=10)
+
+
+
+
+T = function(b){
+  Q = function(x){(((0.05*x[1]*(1-(x[1]/150000)))-((10^(-8))*x[1]*x[2])+(b*x[2]*(1-(x[2]/400000)))-((10^(-8))*x[1]*x[2]))*-1)}
+  x = c(65125,185109)
+  ans = optim(x,Q,method="BFGS")
+  ## Choose which of these that we will return ##
+  print(ans$par)
+  print(ans$value) 
+}
+T(.08)
+
+a = seq(.06,.1,.002) #FIX THIS IN ORDER TO SOLVE THE PROBLEM#
+ans.x1=0
+ans.x2=0
+ans.growth=0
+for(i in 1:length(a)){
+  ans = P(a[i])
+  ans.x1[i]=ans$par[1]
+  ans.x2[i]=ans$par[2]
+  ans.growth[i] = -ans$value
+}
+result = data.frame(a=a,x1=ans.x1,x2=ans.x2,growth=format(ans.growth,big.mark=","))
+print(result)
+plot(a,ans.x1,xlim=c(0,0.02),ylim=c(0,10000),type="l",ylab="optimum x1/x2",main="Figure 2.5/2.6 Book",
+     xaxs="i", yaxs="i",col="blue")
+lines(a,ans.x2,col="red")
+legend("topleft",legend=c("x1","x2"),lty=1,col=c("blue","red"))
+grid(lwd=2, nx=4, ny=10)
+
+#Part c
+T = function(v){
+  B = function(x){(((0.05*x[1]*(1-(x[1]/v)))-((10^(-8))*x[1]*x[2])+(.08*x[2]*(1-(x[2]/400000)))-((10^(-8))*x[1]*x[2]))*-1)}
+  x = c(65125,185109)
+  ans = optim(x,Q,method="BFGS")
+  ## Choose which of these that we will return ##
+  print(ans$par)
+  print(ans$value) 
+}
+T(150000) 
+
+a = seq(149990,150010,1) #FIX THIS IN ORDER TO SOLVE THE PROBLEM#
+ans.x1=0
+ans.x2=0
+ans.growth=0
+for(i in 1:length(a)){
+  ans = P(a[i])
+  ans.x1[i]=ans$par[1]
+  ans.x2[i]=ans$par[2]
+  ans.growth[i] = -ans$value
+}
+result = data.frame(a=a,x1=ans.x1,x2=ans.x2,growth=format(ans.growth,big.mark=","))
+print(result)
+plot(a,ans.x1,xlim=c(0,0.02),ylim=c(0,10000),type="l",ylab="optimum x1/x2",main="Figure 2.5/2.6 Book",
+     xaxs="i", yaxs="i",col="blue")
+lines(a,ans.x2,col="red")
+legend("topleft",legend=c("x1","x2"),lty=1,col=c("blue","red"))
+grid(lwd=2, nx=4, ny=10)
+
+
+
+
+
+T = function(w){
+  C = function(x){(((0.05*x[1]*(1-(x[1]/150000)))-((10^(-8))*x[1]*x[2])+(.08*x[2]*(1-(x[2]/w)))-((10^(-8))*x[1]*x[2]))*-1)}
+  x = c(65125,185109)
+  ans = optim(x,Q,method="BFGS")
+  ## Choose which of these that we will return ##
+  print(ans$par)
+  print(ans$value) 
+}
+T(400000) #Put back in the value for w to test if your code is correct
+
+a = seq(399990,400010,1) #FIX THIS IN ORDER TO SOLVE THE PROBLEM#
+ans.x1=0
+ans.x2=0
+ans.growth=0
+for(i in 1:length(a)){
+  ans = P(a[i])
+  ans.x1[i]=ans$par[1]
+  ans.x2[i]=ans$par[2]
+  ans.growth[i] = -ans$value
+}
+result = data.frame(a=a,x1=ans.x1,x2=ans.x2,growth=format(ans.growth,big.mark=","))
+print(result)
+plot(a,ans.x1,xlim=c(0,0.02),ylim=c(0,10000),type="l",ylab="optimum x1/x2",main="Figure 2.5/2.6 Book",
+     xaxs="i", yaxs="i",col="blue")
+lines(a,ans.x2,col="red")
+legend("topleft",legend=c("x1","x2"),lty=1,col=c("blue","red"))
+grid(lwd=2, nx=4, ny=10)
+
+
+
+
+#Problem 2.4.2
+
+#Part a
+
+T = function(x){((((((0.05*x[1]*(1-(x[1]/150000)))-((10^(-8))*x[1]*x[2]))>=0)+(((0.08*x[2]*(1-(x[2]/400000)))-((10^(-8))*x[1]*x[2])))>=0))*-1)}
+D = Vectorize(T)
+x=c(1000,1000)
+ans = optim(x,T,method="BFGS")
+print(ans)
+paste(c("Growth maximized at:",round(ans$par[1])," Blue Whales and ",
+        round(ans$par[2])," Fin Whales. Resulting in total growth of: whales",
+        format(round(-P(ans$par)),big.mark=",")),collapse="")
+paste(c("Average Growth of blue whales:",round((((0.05*x[1]*(1-(x[1]/150000)))-((10^(-8))*x[1]*x[2]))>=0),collapse="")))
+paste(c("Average Growth of fin whales:",round((((0.08*x[2]*(1-(x[2]/400000)))-((10^(-8))*x[1]*x[2])))>=0)),collapse="")
+
+
+#Problem 2.4.5#
+
+#PART A
+
+p = function(x){(339-0.01*x[1]-.003*x[2])}
+q = function(x){(399-.004*x[1]-0.01*x[2])}
+C = function(x){(400000+220*x[1]+250*x[2])}
+R = function(x){p*x[1]+q*x[2]}
+
+
+P = function(x){((339-0.01*x[1]-.003*x[2])*x[1]+(399-.004*x[1]-0.01*x[2])*x[2]-(400000+220*x[1]+250*x[2]))*-1}
+
+x=c(500,500)
+ans = optim(x,P,method="L-BFGS-B")
+print(ans)
+
+paste(c("Profit maximized at:",round(ans$par[1])," 19 inch TV's and ",
+        round(ans$par[2])," 21 inch TV's. Resulting in total profit of: $",
+        format(round(-P(ans$par)),big.mark=",")),collapse="")
+
+
+
+#PART B
+
+Pnew = function(x){(200000+(339-0.01*x[1]-.003*x[2])*x[1]+(399-.004*x[1]-0.01*x[2])*x[2]-(950000+195*x[1]+225*x[2]))*-1}
+
+
+x=c(500,500)
+ans = optim(x,Pnew,method="L-BFGS-B")
+print(ans)
+
+paste(c("Profit maximized at:",round(ans$par[1])," 19 inch TV's and ",
+        round(ans$par[2])," 21 inch TV's. Resulting in total profit of: $",
+        format(round(-Pnew(ans$par)),big.mark=",")),collapse="")
+
+
+
+#PART C
+Pnew = function(x){((339-0.01*x[1]-.003*x[2])*x[1]+(399-.004*x[1]-0.01*x[2])*x[2]-(400000+195*x[1]+225*x[2])-25*(x[1]+x[2]))*-1}
+
+
+Psense = function(p){
+  Pnew2 = function(x){((339-0.01*x[1]-.003*x[2])*x[1]+(399-.004*x[1]-0.01*x[2])*x[2]-(400000+195*x[1]+225*x[2])-p*(x[1]+x[2]))*-1}
+  x = c(4735,7043)
+  ans = optim(x,Pnew2,method="L-BFGS-B")
+  print(ans$par)
+  print(ans$value) 
+}
+
+Psense(25)
+
+a = seq(18,32,.5) 
+ans.x1=0
+ans.x2=0
+ans.profit=0
+for(i in 1:length(a)){
+  ans = Psense(a[i])
+  ans.x1[i]=ans$par[1]
+  ans.x2[i]=ans$par[2]
+  ans.profit[i] = -ans$value
+}
+result = data.frame(a=a,x1=ans.x1,x2=ans.x2,profit=format(ans.profit,big.mark=","))
+print(result)
+
+
+
+
+
+#PROBLEM 2.4.7#
+
+#PART A
+
+Pt= function(x){((250+100*x[1])*(350-50*x[1])+(1.5+0.1*x[2])*(80000-5000*x[2]-1000*x[1]))*-1}
+
+x = c(500,500)
+ans = optim(x,Pt,method="L-BFGS-B")
+print(ans)
+
+paste(c("Profit maximized at:",round(ans$par[1])," Ad Pages and ",
+        round(ans$par[2])," Subscriptions. Resulting in total profit of: $",
+        format(round(-Pt(ans$par)),big.mark=",")),collapse="")
+
+
+#PART B
+
+Ps = function(p){
+  Pq = function(x){((250+100*x[1])*(350-50*x[1])+(1.5+0.1*x[2])*(80000-p*x[2]-1000*x[1]))*-1}
+  x = c(50000,50000)
+  ans=optim(x,Pq,method="L-BFGS-B")
+  return(ans)
+}
+Ps(5000)
+
+r = seq(4900,5100,10)
+ans.x1=0
+ans.x2=0
+ans.rev=0
+for (i in 1:length(r)){
+  ans = Ps(r[i])
+  ans.x1[i] = ans$par[1]
+  ans.x2[i]= ans$par[2]
+  ans.rev[i]=-ans$value
+}
+print(ans.x1)
+result = data.frame(Subscriptions=r,Inc_Ad=ans.x1,Inc_paper=ans.x2,Profit=ans.rev)
+print(result)
+
+#PROBLEM 2.4.6#
+
+#Part A
+
+obj=function(x){((10000*(1+0.5*x[1]))+200*x[2])*(950-100*x[1])-(700*(10000*(1+0.5*x[1])+200*x[2]))-(50000-10000*x[2])*-1}
+
+con=function(x){
+  f=NULL
+  f=rbind(f,-50000-10000*x[1])
+  return(list(ceq=f,c=NULL))
+}
+x0=c(1,1)
+ans=solnl(x0,objfun=obj,confun=con)
+print(ans$par)
+print(-ans$fn)
+print(ans$lambda)
+
+
+#Part B
+
+obj=function(x){((10000*(1+0.5*x[1]))+200*x[2])*(950-100*x[1])-(700*(10000*(1+0.5*x[1])+200*x[2]))-(50000-10000*x[2])*-1}
+
+
+#PROBLEM 2.4.9#
+
+install.packages("lpSolve")
+
+#Part A
+
+library(MASS); library(NlcOptim); library(lpSolve)
+
+obj=function(x){(1.50*(80000*(1-.02*x[1]))+250*(350*(1-.001*x[1]+.15*x[2]))-(80000*(1-x[1]))-(30000*(1+.02*x[2]))-90000)*-1}
+
+con = function(x){
+  f=NULL
+  f=rbind(f,(80000*(1-x[1]))-80000)
+  f=rbind(f,((80000*(1-x[1]))+(30000*(1+.02*x[2]))+110000))
+  f=rbind(f,((30000*(1+.02*x[2]))-50000))
+      
+  return(list(ceq=f,c=NULL))
+}
+
+x0=c(1.53,460)
+solnl(x0,objfun=obj,confun=con)
