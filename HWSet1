@@ -610,3 +610,140 @@ con = function(x){
 
 x0=c(1.53,460)
 solnl(x0,objfun=obj,confun=con)
+
+
+
+#LESSON 9
+
+#Problem 1
+fun1=function(x){((600-3*x[1]+x[2])+x[2]*(800-2*x[2]+x[1]))*-1}
+Aeq=matrix(c(12,5),nrow=1)
+print(Aeq)
+Beq=matrix(2500)
+x0=c(10,10)
+ans=solnl(x0,objfun=fun1,Aeq=Aeq,Beq=Beq)
+print(ans)
+
+
+#Problem 2
+fun2=function(x){((600-3*x[1]+x[2])+x[2]*(800-2*x[2]+x[1]))*-1}
+x0=c(10,10)
+A=matrix(c(12,5,-1,0,0,-1),nrow=3,byrow=TRUE)
+print(A)
+B=matrix(c(2500,0,0),nrow=3)
+print(B)
+ans=solnl(x0,fun2,A=A,B=B)
+print(ans)
+
+#Problem 4
+
+#Part a
+fun1=function(x){((600-3*x[1]+x[2])+x[2]*(800-2*x[2]+x[1]))*-1}
+X = list(x=seq(-200,200,10),y=seq(0,10000,10))
+Z = Outer(fun1,X)
+contour(x=X$x,y=X$y,z=Z,lwd=3)
+points(X$x,X$x^2/2,type="l",col="red")
+
+#Part b
+
+fun1=function(x){((600-3*x[1]+x[2])+x[2]*(800-2*x[2]+x[1]))*-1}
+X = list(x=seq(-200,200,10),y=seq(0,10000,10))
+Z = Outer(fun1,X)
+contour(x=X$x,y=X$y,z=Z,lwd=3)
+points(X$x,X$x^2/2,type="l",col="red")
+#Not Very sure what to do here?
+
+
+#Problem 5
+
+
+fun5=function(x){(x[1]*(10+22*x[1]^-0.5+1.3*x[2]^-0.1)-18*x[1]+x[2]*(5+15*x[2]^-.05+0.8*x[1]^-.08)-10*x[2])*-1}
+x0=c(10,10)
+ans=optim(x0,fun5,method="BFGS")
+print(ans)
+
+
+#Problem 6
+fun6=function(x){(x[1]*(10+22*x[1]^-0.5+1.3*x[2]^-0.1)-18*x[1]+x[2]*(5+15*x[2]^-.05+0.8*x[1]^-.08)-10*x[2])*-1}
+x0=c(10,10)
+A=matrix(c(2,3,-1,0,0,-1),nrow=3,byrow=TRUE)
+print(Aeq)
+B=matrix(c(18,3,2),nrow=3)
+print(Beq)
+ans=solnl(x0,objfun=fun6,A=A,B=B)
+print(ans)
+
+
+#Problem 7
+
+fun7=function(x){(x[1]*(10+22*x[1]^-0.5+1.3*x[2]^-0.1)-18*x[1]+x[2]*(5+15*x[2]^-.05+0.8*x[1]^-.08)-10*x[2])*-1}
+x0=c(10,10)
+A=matrix(c(50,100,1,0,0,1),nrow=3,byrow=TRUE)
+print(Aeq)
+B=matrix(c(600,7,5),nrow=3)
+print(Beq)
+ans=solnl(x0,objfun=fun7,A=A,B=B)
+print(ans)
+
+X = list(x=seq(0,10000,100),y=seq(0,10000,100))
+Z = Outer(fun7,X)
+contour(x=X$x,y=X$y,z=-Z,lwd=3)
+points(X$x,X$x^2/2,type="l",col="red")
+
+#I can't seem to figure out the contour plot
+
+
+#Problem 8
+
+fun8=function(x){(x[1]*(10+22*x[1]^-0.5+1.3*x[2]^-0.1)-18*x[1]+x[2]*(5+15*x[2]^-.05+0.8*x[1]^-.08)-10*x[2])*-1}
+x0=c(10,10)
+Aeq=matrix(c(2,3,1,0,0,-1,0,0,1,0,0,-1,0,0,1),nrow=3,byrow=T)
+print(Aeq)
+Beq=matrix(c(18,3,2),nrow=3,byrow=T)
+print(Beq)
+A=matrix(c(0,0,1,1,1),nrow=5)
+print(A)
+B=matrix(c(0,0,0,0,0),byrow=T)
+print(B)
+ans=solnl(x0,fun8,Aeq=Aeq,Beq=Beq,A=A,B=B)
+print(ans)
+
+
+#Lesson 10
+library(MASS); library(NlcOptim); library(ma391)
+help("Situations")
+help("Multivar")
+
+#Problem 1
+obj1=function(x){((339-0.01*x[1]-0.003*x[2])*x[1]+(339-0.004*x[1]-0.01*x[2])*x[2]-(400000+195*x[1]+225*x[2]))*-1}
+x0=c(100,100)
+A=matrix(c(1,1,1,0,0,1),nrow=3,byrow=T)
+print(A)
+B=matrix(c(10001,3001,8001),nrow=3,byrow=T)
+print(B)
+ans=solnl(x0,objfun=obj1,A=A,B=B)
+print(ans)
+
+obj1=function(x){((339-0.01*x[1]-0.003*x[2])*x[1]+(339-0.004*x[1]-0.01*x[2])*x[2]-(400000+195*x[1]+225*x[2]))*-1}
+x0=c(100,100)
+A=matrix(c(1,1,1,0,0,1),nrow=3,byrow=T)
+print(A)
+B=matrix(c(10001,3002,8001),nrow=3,byrow=T)
+print(B)
+ans=solnl(x0,objfun=obj1,A=A,B=B)
+print(ans)
+
+
+
+#Problem 2
+#NO CODE NEEDED#
+
+
+#Problem 3
+#NO CODE NEEDED#
+
+
+#Problem 4.
+myfun=function(x){(x[1]*(.02*x[1]+.06*x[2])-x[2]*(.4*x[2]-.3*x[1])-.1*x[1])*-1}
+x0=c(10,10)
+optim(x0,myfun)
